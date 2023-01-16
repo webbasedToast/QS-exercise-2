@@ -2,11 +2,14 @@ package com.example.exercise2;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
+//@TestMethodOrder(MethodOrderer.Random.class)
+@TestMethodOrder(MethodOrderer.Random.class)
 public class PersonTest {
 
     @Test
@@ -30,13 +33,24 @@ public class PersonTest {
     }
 
     @Disabled
-    void testcase_3_toBeIgnored() { assertTrue(true);}
+    void testcase_3_toBeIgnored() {
+        assertTrue(true);
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"02/12/1993", "32-02-9999", "29-02-1993", "11.12.2021"})
+        // six numbers
+    void testcase_4(String birthday) {
+        Person adamSmith = new Person("Adam", "Smith");
+        assertThrows(RuntimeException.class, () -> adamSmith.setBirthDay(birthday));
+    }
+
 
     @Test
     void testcase_5a() {
         Person p1 = new Person("Anne", "Dallas");
         assertAll("p1", () -> assertEquals("Anne", p1.getName()),
-                                () -> assertEquals("Dallas", p1.getSurname())
+                () -> assertEquals("Dallas", p1.getSurname())
         );
     }
 
@@ -47,6 +61,12 @@ public class PersonTest {
                 () -> assertEquals("Doe", p2.getSurname()),
                 () -> assertEquals("03-11-1756", p2.getBirthDay())
         );
+    }
+
+    @Test
+    @EnabledOnOs({OS.MAC})
+    public void testcase_6() {
+        assertTrue(true);
     }
 
     @Test
